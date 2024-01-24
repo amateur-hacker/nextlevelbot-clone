@@ -1,0 +1,27 @@
+const paymentLogos = [
+  "apple-pay",
+  "bancontact",
+  "blik",
+  "boleto",
+  "digital-currency",
+  "google-pay",
+  "ideal",
+  "mastercard",
+  "multibanco",
+  "neosurf",
+  "neteller",
+  "pay-pal",
+  "paysafe",
+  "paysafecard",
+  "pix",
+  "red-campra",
+  "skrill",
+  "trustly",
+  "union-pay",
+  "visa",
+  "web-money",
+  "zen-long",
+  "zen-short",
+];
+
+export default paymentLogos;
