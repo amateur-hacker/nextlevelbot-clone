@@ -148,7 +148,7 @@ const Login = () => {
         </form>
 
         <ToastContainer
-          position="bottom-right"
+          position="top-right"
           autoClose={5000}
           newestOnTop={false}
           pauseOnHover={false}

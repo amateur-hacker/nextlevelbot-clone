@@ -323,7 +323,7 @@ const Register = () => {
         error: "Error While Signing up 🤯",
       });
 
-      await myPromise()
+      // await myPromise()
 
       window.location.href = "/login"
     } catch (error) {
@@ -479,7 +479,7 @@ const Register = () => {
           </button>
         </form>
         <ToastContainer
-          position="bottom-right"
+          position="top-right"
           autoClose={5000}
           newestOnTop={false}
           pauseOnHover={false}
