@@ -315,9 +315,6 @@ const Section1 = () => {
                 id="video"
                 className="min-w-[300px] bg-white"
                 src={videoFiles[index]}
-                autoPlay
-                muted
-                loop
               >
                 Your browser does not support the video tag.
               </video>

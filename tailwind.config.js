@@ -14,6 +14,7 @@ module.exports = {
       },
       screens: {
         "2lg": "1075px",
+        "2md": "900px",
       },
       // animation: {
       //   "slide-bottom": "slide-bottom 0.3s ease-in both",

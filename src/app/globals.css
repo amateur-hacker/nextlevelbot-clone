@@ -136,6 +136,30 @@ html {
   /* grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); */
 }
 
+.trader-img-div {
+  background: url(/signin/trader.jpeg);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-repeat: no-repeat;
+  background-position: top;
+  position: relative;
+}
+
+.trader-img-div::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.signin-parent-div, .signin-child-div {
+  box-shadow: 1px 1px 20px 7px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 1px 1px 20px 7px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 1px 1px 20px 7px rgba(0, 0, 0, 0.4);
+}
+
+
 /* .menu-slide-up {
   animation: height-animation2;
   animation-duration: 300ms;
