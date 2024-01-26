@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const page = () => {
+
   const logoutUser = async (e) => {
     try {
       e.preventDefault();
@@ -18,6 +19,10 @@ const page = () => {
       console.log(data);
 
       toast(`${data.message}`);
+
+      // if (!data.message.includes("not found")) {
+      window.location.href = "/login";
+      // }
     } catch (error) {
       console.log(`Error coming from logoutUser function: ${error.message}`);
     }
