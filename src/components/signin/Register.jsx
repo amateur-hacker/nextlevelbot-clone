@@ -18,6 +18,20 @@ const Register = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    const button = document.querySelector("button");
+    button.addEventListener("click", function (e) {
+      const x = e.clientX - this.offsetLeft;
+      const y = e.clientY - this.offsetTop;
+      const ripples = document.createElement("span");
+      ripples.className =
+        `left-[${x}px] top-[${y}px]` +
+        " absolute bg-white -translate-x-1/2 -translate-y-1/2 rounded-full animate-ripple";
+      this.appendChild(ripples);
+      setTimeout(() => ripples.remove(), 1000);
+    });
+  });
+
   const phoneCode = [
     "91",
     "93",
@@ -459,7 +473,7 @@ const Register = () => {
 
           <button
             type="submit"
-            className="!mt-16 px-4 py-2 bg-gray-900 text-white rounded-lg w-[80%] mx-auto shadow-black/30 shadow-lg"
+            className="!mt-16 px-4 py-2 bg-gray-900 text-white rounded-lg w-[80%] mx-auto shadow-black/30 shadow-lg relative overflow-hidden"
           >
             <span>Sign up</span>
           </button>

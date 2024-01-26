@@ -35,16 +35,17 @@ const Login = () => {
         return new Promise((resolve) => {
           setTimeout(() => {
             resolve("Promise resolved after 3 seconds");
-          }, 3000);
+          }, 2000);
         });
       };
 
-      await toast.promise(myPromise, {
-        pending: "Signing in",
-        success: "Signin Successfully 👌",
-        error: "Error While Signing in 🤯",
-      });
+      // await toast.promise(myPromise, {
+      //   pending: "Signing in",
+      //   success: "Signin Successfully 👌",
+      //   error: "Error While Signing in 🤯",
+      // });
 
+      toast("Redirecting ....");
       await myPromise();
 
       window.location.href = "/home";
@@ -53,6 +54,19 @@ const Login = () => {
     }
   };
   const [isPasswordShown, setIsPasswordShown] = useState(false);
+  useEffect(() => {
+    const button = document.querySelector("button");
+    button.addEventListener("click", function (e) {
+      const x = e.clientX - this.offsetLeft;
+      const y = e.clientY - this.offsetTop;
+      const ripples = document.createElement("span");
+      ripples.className =
+        `left-[${x}px] top-[${y}px]` +
+        " absolute bg-white -translate-x-1/2 -translate-y-1/2 rounded-full animate-ripple";
+      this.appendChild(ripples);
+      setTimeout(() => ripples.remove(), 1000);
+    });
+  });
   return (
     <div className="w-full h-full flex items-center justify-center bg-white">
       <div className="space-y-10 my-10  max-w-[300px] 2sm:max-w-max">
@@ -113,7 +127,6 @@ const Login = () => {
               <input
                 class="accent-gray-900 w-4 cursor-pointer"
                 type="checkbox"
-                required
               />
 
               <span className="text-gray-700 text-sm">Remember me</span>
@@ -128,7 +141,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="!mt-16 px-4 py-2 bg-gray-900 text-white rounded-lg w-[80%] mx-auto shadow-black/30 shadow-lg"
+            className="!mt-16 px-4 py-2 bg-gray-900 text-white rounded-lg w-[80%] mx-auto shadow-black/30 shadow-lg relative overflow-hidden"
           >
             Sign in
           </button>

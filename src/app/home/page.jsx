@@ -1,9 +1,13 @@
-import React from 'react'
+import React from "react";
 
 const page = () => {
   return (
-    <div className='absolute top-1/2 left-1/2 -transate-x-1/2 -translate-y-1/2 text-2xl'>Home Page</div>
-  )
-}
+    <div className="">
+      <nav className="min-h-[80px] h-full flex justify-center items-center border-b-2">
+        <button className="bg-gray-900 px-3 py-2 rounded-lg text-white">Open API</button>
+      </nav>
+    </div>
+  );
+};
 
-export default page
+export default page;
