@@ -74,7 +74,7 @@ const Login = () => {
           Cookies.set("authtoken", data.authToken, { expires: 1 });
         }
         toast("Redirecting ....");
-        await wait(3000);
+        await wait(1500);
         router.push("/home");
       } else {
         const textData = await response.text();
