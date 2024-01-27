@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Akaya_Kanadaka } from "next/font/google";
+
+const akayaKanadaka = Akaya_Kanadaka({ subsets: ["latin"], weight: "400" });
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +15,9 @@ const ResetPassword = () => {
         <div className="space-y-2">
           <div className="text-center space-x-3">
             <i className="ri-robot-2-fill ri-2x text-gray-900"></i>
-            <span>Let&apos;s Automate Trading</span>
+            <span className={`text-2xl ${akayaKanadaka.className}`}>
+              Let&apos;s Automate Trading
+            </span>
           </div>
           <p className="text-center text-gray-500 w-[280px] mx-auto text-sm">
             Forgot Password <i className="ri-lock-fill ri-xl text-gray-900"></i>
