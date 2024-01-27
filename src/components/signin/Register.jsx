@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 // import codes from "country-calling-code";
 import { wobbleTextAnimation } from "@/src/utils/wobble";
@@ -7,7 +7,8 @@ import Link from "next/link";
 import { loading } from "@/public/signin";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import useDebounce from "@/src/utils/useDebounce";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const Register = () => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
@@ -17,6 +18,22 @@ const Register = () => {
   const [countryCode, setCounryCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const checkAuthenticationLogin = useCallback(() => {
+    const authtoken = Cookies.get("authtoken");
+    const userid = Cookies.get("userid");
+
+    if (!authtoken || !userid) {
+      router.push("/register");
+    } else {
+      router.push("/home");
+    }
+  }, [router]);
+
+  useEffect(() => {
+    checkAuthenticationLogin();
+  }, [checkAuthenticationLogin]);
 
   useEffect(() => {
     const button = document.querySelector("button");
@@ -301,31 +318,24 @@ const Register = () => {
       );
 
       const data = await response.json();
-      console.log(data);
-      if (data.message.includes("already")) {
+      if (data.message.includes("email already exists")) {
         toast.error("Email Already Exist");
         const emailInput = document.getElementById("email");
         emailInput.focus();
-        emailInput.scrollIntoView()
+        emailInput.scrollIntoView();
         return;
       }
-      const myPromise = async () => {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve("Promise resolved after 3 seconds");
-          }, 3000);
-        });
+      const wait = (milliseconds) => {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds));
       };
 
-      await toast.promise(myPromise, {
+      await toast.promise(wait(3000), {
         pending: "Signing up",
         success: "Signup Successfully 👌",
         error: "Error While Signing up 🤯",
       });
 
-      // await myPromise()
-
-      window.location.href = "/login"
+      router.push("/login");
     } catch (error) {
       console.log(`Error coming from registerUser function: ${error.message}`);
     } finally {
@@ -437,7 +447,6 @@ const Register = () => {
                 required
                 placeholder="8858880080"
                 minLength={10}
-                maxLength={10}
                 onChange={(e) => setPhoneNumber(e.target.value)}
               />
             </div>

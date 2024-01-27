@@ -1,23 +1,48 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { wobbleTextAnimation } from "@/src/utils/wobble";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     wobbleTextAnimation();
   }, []);
+
+  const checkAuthenticationLogin = useCallback(() => {
+    const authtoken = Cookies.get("authtoken");
+    const userid = Cookies.get("userid");
+
+    if (!authtoken && !userid) {
+      router.push("/login");
+    } else {
+      router.push("/home");
+    }
+  }, [router]);
+
+  useEffect(() => {
+    checkAuthenticationLogin();
+  }, [checkAuthenticationLogin]);
+
   const LoginUser = async (e) => {
     try {
       e.preventDefault();
+
       const response = await fetch("https://nextlevelpine.com/nlbweb/login", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -28,32 +53,46 @@ const Login = () => {
         }),
       });
 
-      const data = await response.json();
-      console.log(data);
-
-      const myPromise = async () => {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve("Promise resolved after 3 seconds");
-          }, 2000);
-        });
+      const contentType = response.headers.get("content-type");
+      const wait = (milliseconds) => {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds));
       };
 
-      // await toast.promise(myPromise, {
-      //   pending: "Signing in",
-      //   success: "Signin Successfully 👌",
-      //   error: "Error While Signing in 🤯",
-      // });
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+        console.log("Response Data (JSON):", data);
+        if (
+          !Cookies.get("userid") &&
+          !Cookies.get("authtoken") &&
+          data.userId &&
+          data.authToken
+        ) {
+          Cookies.set("userid", data.userId, { expires: 1 });
+          Cookies.set("authtoken", data.authToken, { expires: 1 });
+        }
+        toast("Redirecting ....");
+        await wait(3000);
+        router.push("/home");
+      } else {
+        const textData = await response.text();
+        console.log("Response Data (Text):", textData);
+        if (textData.includes("Email ID not found")) {
+          toast.error("Email ID not found");
+          const emailInput = document.getElementById("email");
+          emailInput.focus();
+          emailInput.scrollIntoView();
+        } else {
+          toast.error("Incorrect Password");
 
-      toast("Redirecting ....");
-      await myPromise();
-
-      window.location.href = "/home";
+          const passwordInput = document.getElementById("password");
+          passwordInput.focus();
+          passwordInput.scrollIntoView();
+        }
+      }
     } catch (error) {
       console.log(`Error coming from loginUser function: ${error.message}`);
     }
   };
-  const [isPasswordShown, setIsPasswordShown] = useState(false);
   useEffect(() => {
     const button = document.querySelector("button");
     button.addEventListener("click", function (e) {
@@ -67,6 +106,10 @@ const Login = () => {
       setTimeout(() => ripples.remove(), 1000);
     });
   });
+  const handleRememberMeChange = () => {
+    setRememberMe(!rememberMe);
+  };
+
   return (
     <div className="w-full h-full flex items-center justify-center bg-white">
       <div className="space-y-10 my-10  max-w-[300px] 2sm:max-w-max">
@@ -127,6 +170,8 @@ const Login = () => {
               <input
                 class="accent-gray-900 w-4 cursor-pointer"
                 type="checkbox"
+                checked={rememberMe}
+                onChange={handleRememberMeChange}
               />
 
               <span className="text-gray-700 text-sm">Remember me</span>
