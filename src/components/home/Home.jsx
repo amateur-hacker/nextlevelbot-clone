@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
@@ -8,8 +8,10 @@ import { useCallback } from "react";
 // import { checkAuthentication } from "@/src/utils/auth";
 import { RandomAvatar } from "react-random-avatars";
 import Image from "next/image";
+import generateName from "sillyname";
 
 const Home = () => {
+  const [toggleMenu, setToggleMenu] = useState(false);
   const router = useRouter();
   const checkAuthenticationHome = useCallback(() => {
     const authtoken = Cookies.get("authtoken");
@@ -21,29 +23,41 @@ const Home = () => {
     }
   }, [router]);
 
-  const userId = Cookies.get("userid") || null;
+  const [userId, setUserId] = useState(0);
+  const [userName, setUserName] = useState("username");
 
-  // useEffect(() => {
-  //   checkAuthenticationHome();
-  // }, [checkAuthenticationHome]);
+  useEffect(() => {
+    // Check if running on the client side
+    if (typeof window !== "undefined") {
+      const userIdFromCookie = Cookies.get("userid");
+      const randomName = generateName();
+      setUserId(userIdFromCookie);
+      setUserName(randomName)
 
-  // const logoutUser = async (e) => {
-  //   try {
-  //     e.preventDefault();
+    }
+  }, []);
 
-  //     toast("Logout Successfully");
+  useEffect(() => {
+    checkAuthenticationHome();
+  }, [checkAuthenticationHome]);
 
-  //     const authtoken = Cookies.get("authtoken");
-  //     const userid = Cookies.get("userid");
-  //     if (authtoken && userid) {
-  //       Cookies.remove("userid");
-  //       Cookies.remove("authtoken");
-  //     }
-  //     checkAuthenticationHome();
-  //   } catch (error) {
-  //     console.log(`Error coming from logoutUser function: ${error.message}`);
-  //   }
-  // };
+  const logoutUser = (e) => {
+    try {
+      e.preventDefault();
+
+      toast("Logout Successfully");
+
+      const authtoken = Cookies.get("authtoken");
+      const userid = Cookies.get("userid");
+      if (authtoken && userid) {
+        Cookies.remove("userid");
+        Cookies.remove("authtoken");
+      }
+      checkAuthenticationHome();
+    } catch (error) {
+      console.log(`Error coming from logoutUser function: ${error.message}`);
+    }
+  };
 
   // const loginUser = async (e) => {
   //   try {
@@ -92,23 +106,41 @@ const Home = () => {
             Logout
           </button> */}
           <div></div>
-          <div>
+          <div className="relative">
             <div className="flex justify-center items-center space-x-4">
               <div className="flex flex-col items-center justify-cente">
-                <span>Username</span>
+                <span>{userName}</span>
                 <span>{userId}</span>
               </div>
               {/* <RandomAvatar name={`${new Date()}`} mode="random" size={40} /> */}
-              <Image
-                width={50}
-                height={50}
-                alt="defualt profile image"
-                src="/default-profile.png"
-              />
+              <div
+                onClick={() => setToggleMenu(!toggleMenu)}
+                className="cursor-pointer"
+              >
+                <Image
+                  width={50}
+                  height={50}
+                  alt="defualt profile image"
+                  src="/default-profile.png"
+                />
+              </div>
             </div>
-            <div className="hidden">
-              <button>Profile</button>
-              <button>Profile</button>
+            <div
+              className={`absolute top-[70px] flex flex-col w-full p-4 space-y-2 bg-gray-100/50 ${
+                !toggleMenu ? "hidden" : "flex"
+              }`}
+            >
+              <button className="p-2 border rounded-2xl border-black hover:bg-black/10 transition-all duration-300 ease-in">
+                <i className="ri-user-line mr-4" />
+                Profile
+              </button>
+              <button
+                className="p-2 border rounded-2xl border-black hover:bg-black/10 transition-all duration-300 ease-in"
+                onClick={logoutUser}
+              >
+                <i className="ri-logout-circle-r-line mr-4"></i>
+                Logout
+              </button>
             </div>
           </div>
         </nav>

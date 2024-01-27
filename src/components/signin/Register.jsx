@@ -332,7 +332,7 @@ const Register = () => {
         return new Promise((resolve) => setTimeout(resolve, milliseconds));
       };
 
-      await toast.promise(wait(3000), {
+      await toast.promise(wait(1500), {
         pending: "Signing up",
         success: "Signup Successfully 👌",
         error: "Error While Signing up 🤯",
